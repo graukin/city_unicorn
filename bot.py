@@ -16,7 +16,7 @@ def hi_command(bot, update):
     if name is None:
         name = user.username
     msg = name + ', why are you talking to me?!'
-    bot.sendMessage(chat_id=update.message.chat_id, text=random.choice(msgs))
+    bot.sendMessage(chat_id=update.message.chat_id, text=msg)
 
 def help_command(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     TOKEN=os.environ['bot_token']
     PORT = int(os.environ.get('PORT', '5000'))
     updater = Updater(TOKEN)
-
+    logger.info('wake up')
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,
                           url_path=TOKEN)
