@@ -3,7 +3,6 @@
 import logging
 import os
 import sys
-import telebot
 
 from telegram.parsemode import ParseMode
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
