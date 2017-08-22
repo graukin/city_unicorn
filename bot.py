@@ -1,4 +1,4 @@
-#!/usr/bin/python3.4
+#!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 import logging
 import os
@@ -15,7 +15,7 @@ def hi_command(bot, update):
     name = user.first_name
     if name is None:
         name = user.username
-    msg = name + ', why are you talking to me?!'
+    msg = name + ', I\'m here to serve'
     bot.sendMessage(chat_id=update.message.chat_id, text=msg)
 
 def help_command(bot, update):
