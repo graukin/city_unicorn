@@ -1,0 +1,47 @@
+#!/usr/bin/python3.4
+# -*- coding: utf-8 -*-
+import logging
+import os
+import sys
+import telebot
+
+from telegram.parsemode import ParseMode
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARN)
+logger = logging.getLogger(__name__)
+
+def hi_command(bot, update):
+    user = update.message.from_user
+    name = user.first_name
+    if name is None:
+        name = user.username
+    msg = name + ', why are you talking to me?!'
+    bot.sendMessage(chat_id=update.message.chat_id, text=random.choice(msgs))
+
+def help_command(bot, update):
+    bot.sendMessage(chat_id=update.message.chat_id, 
+                    text='<code>/hi</code> - bot will say something',
+                    parse_mode=ParseMode.HTML)
+
+def error(bot, update, error):
+    logger.warn('Update "%s" caused error "%s"' % (update, error))
+
+if __name__ == '__main__':
+    TOKEN=os.environ['bot_token']
+    PORT = int(os.environ.get('PORT', '5000'))
+    updater = Updater(TOKEN)
+
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=TOKEN)
+    updater.bot.setWebhook("https://cityunic.herokuapp.com/" + TOKEN)
+
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("hi", hi_command))
+
+    dispatcher.add_error_handler(error)
+
+    updater.idle()
+
