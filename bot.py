@@ -35,7 +35,7 @@ if __name__ == '__main__':
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,
                           url_path=TOKEN)
-    updater.bot.setWebhook("https://cityunic.herokuapp.com/" + TOKEN)
+    updater.bot.setWebhook("https://city-punic.herokuapp.com/" + TOKEN)
 
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("help", help_command))
