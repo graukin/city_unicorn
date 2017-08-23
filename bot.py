@@ -3,16 +3,16 @@
 import logging
 import os
 import sys
-import sqlite3
 
 from telegram.parsemode import ParseMode
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
+from dbhelper import DBHelper
+
+db = DBHelper()
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARN)
 logger = logging.getLogger(__name__)
-
-conn = sqlite3.connect(r"info_extractor/streets_NizhNov.db", check_same_thread=False)
-c = conn.cursor()
 
 def hi_command(bot, update):
     user = update.message.from_user
@@ -28,9 +28,8 @@ def grep_command(bot, update):
     if ndx == -1:
         bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
     else:
-        res=""
-        for row in c.execute("SELECT name FROM streets WHERE name LIKE '%" + msg_text[ndx:] + "%'"):
-            res=res+row
+        logger.warn(msg_text[ndx:])
+        res=db.get_items(msg_text[ndx:])
         bot.sendMessage(chat_id=update.message.chat_id, text=res)
 
 def help_command(bot, update):
