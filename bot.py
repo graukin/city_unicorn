@@ -29,7 +29,7 @@ def grep_command(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
     else:
         logger.warn(msg_text[ndx:])
-        res=db.get_items(msg_text[ndx:])
+        res=db.get_names(msg_text[ndx:])
         bot.sendMessage(chat_id=update.message.chat_id, text=res)
 
 def help_command(bot, update):
