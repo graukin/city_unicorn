@@ -12,6 +12,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 conn = sqlite3.connect(r"info_extractor/streets_NizhNov.db")
+c = conn.cursor()
 
 def hi_command(bot, update):
     user = update.message.from_user
@@ -27,7 +28,6 @@ def grep_command(bot, update):
     if ndx == -1:
         bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
     else:
-        c = conn.cursor()
         res=""
         for row in c.execute("SELECT name FROM streets WHERE name LIKE '%" + msg_text[ndx:] + "%'"):
             res=res+row
