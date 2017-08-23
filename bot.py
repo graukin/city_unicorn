@@ -9,8 +9,6 @@ from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from dbhelper import DBHelper
 
-db = DBHelper()
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARN)
 logger = logging.getLogger(__name__)
 
@@ -29,6 +27,7 @@ def grep_command(bot, update):
         bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
     else:
         logger.warn(msg_text[ndx:])
+        db = DBHelper()
         res=db.get_names(msg_text[ndx:])
         bot.sendMessage(chat_id=update.message.chat_id, text=res)
 
