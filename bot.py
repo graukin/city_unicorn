@@ -11,7 +11,7 @@ from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARN)
 logger = logging.getLogger(__name__)
 
-conn = sqlite3.connect(r"info_extractor/streets_NizhNov.db")
+conn = sqlite3.connect(r"info_extractor/streets_NizhNov.db", check_same_thread=False)
 c = conn.cursor()
 
 def hi_command(bot, update):
