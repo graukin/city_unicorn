@@ -35,8 +35,8 @@ def grep_command(bot, update):
 
 def help_command(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, 
-                    text='<code>/hi</code> - bot will say something',
-                    text='<code>/grep</code> - search for smth in street name; case insensitive; ^ and $ are not supported',
+                    text='<code>hi</code> - bot will say something\n' +
+                         '<code>grep</code> - search for smth in street name; case insensitive',
                     parse_mode=ParseMode.HTML)
 
 def error(bot, update, error):
