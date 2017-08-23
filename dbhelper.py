@@ -13,4 +13,4 @@ class DBHelper:
 
     def get_names(self, part):
         stmt = "SELECT name FROM streets WHERE name LIKE '%" + part + "%'"
-        return [x[0].encode('utf-8') for x in self.conn.execute(stmt)]
+        return ','.join([x[0] for x in self.conn.execute(stmt)]).decode('utf-8', 'ignore')
