@@ -26,9 +26,9 @@ def grep_command(bot, update):
     if ndx == -1:
         bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
     else:
-        logger.warn(msg_text[ndx:])
+        logger.warn(msg_text[ndx+1:])
         db = DBHelper()
-        res=db.get_names(msg_text[ndx:])
+        res=db.get_names(msg_text[ndx+1:])
         bot.sendMessage(chat_id=update.message.chat_id, text=res)
 
 def help_command(bot, update):
