@@ -21,4 +21,4 @@ class DBHelper:
     def get_exact_name(self, part):
         stmt = "SELECT name, district, lon, lat FROM streets WHERE name_low == '" + part.lower() + "'"
         print(stmt)
-        return '\n'.join([x[0] for x in self.conn.execute(stmt)])
+        return '\n'.join([x[0]+","+x[1]+","+x[2] for x in self.conn.execute(stmt)])
