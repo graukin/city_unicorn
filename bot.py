@@ -8,6 +8,7 @@ from telegram.parsemode import ParseMode
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
 from dbhelper import DBHelper
+from geo import GeoZone,GeoPoint
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARN)
 logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ def exact_command(bot, update):
     msg_text = update.message.text.strip()
     ndx = msg_text.find(' ')
     if ndx == -1:
-        bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
+        bot.sendMessage(chat_id=update.message.chat_id, text="exact WHAT?")
     else:
         logger.warn(msg_text[ndx+1:])
         db = DBHelper()
@@ -45,10 +46,31 @@ def exact_command(bot, update):
         print("lon=" + arr[-3] + ", lat=" + arr[-2])
         bot.sendLocation(chat_id=update.message.chat_id, longitude=float(arr[-3]), latitude=float(arr[-2]))
 
+def bounds_command(bot, update):
+    msg_text = update.message.text.strip()
+    ndx = msg_text.find(' ')
+    if ndx == -1:
+        bot.sendMessage(chat_id=update.message.chat_id, text="incorrect")
+    else:
+        arr=msg_text[ndx+1:].split(' ')
+        if length(arr) != 5:
+            bot.sendMessage(chat_id=update.message.chat_id, text="incorrect: " + repr(length(arr)) + "parts")
+        else:
+            p1 = GeoPoint(float(arr[1]), float(arr[2]))
+            p2 = GeoPoint(float(arr[3]), float(arr[4]))
+            offset = int(arr[5])
+            zone = GeoZone(p1, p2, offset)
+            bot.sendLocation(chat_id=update.message.chat_id, longitude=zone.central.lon, latitude=zone.central.lat)
+
+            db = DBHelper()
+            res=db.get_zone(zone.bounds)
+            bot.sendMessage(chat_id=update.message.chat_id, text=repr(zone.radius) + "\n" + res)
+
 def help_command(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, 
-                    text='<code>hi</code> - bot will say something\n' +
-                         '<code>grep</code> - search for smth in street name; case insensitive' +
+                    text='<code>help</code> - print this message\n' +
+                         '<code>hi</code> - bot will say something\n' +
+                         '<code>grep</code> - search for smth in street name; case insensitive\n' +
                          '<code>exact</code> - search for exact street',
                     parse_mode=ParseMode.HTML)
 
@@ -70,6 +92,7 @@ if __name__ == '__main__':
     dispatcher.add_handler(CommandHandler("hi", hi_command))
     dispatcher.add_handler(CommandHandler("grep", grep_command))
     dispatcher.add_handler(CommandHandler("exact", exact_command))
+    dispatcher.add_handler(CommandHandler("bounds", bounds_command))
 
     dispatcher.add_error_handler(error)
 

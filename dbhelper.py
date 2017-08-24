@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import sqlite3
 
+#import sys
+#reload(sys)  # Reload does the trick!
+#sys.setdefaultencoding('UTF8')
 
 class DBHelper:
     def __init__(self, dbname="info_extractor/streets_NizhNov.db"):
@@ -22,3 +25,9 @@ class DBHelper:
         stmt = "SELECT name, district, lon, lat FROM streets WHERE name_low == '" + part.lower() + "'"
         print(stmt)
         return '\n'.join([x[0]+","+x[1]+", ( "+repr(x[2]) +" "+repr(x[3]) + " )" for x in self.conn.execute(stmt)])
+
+    def get_zone(self, bounds):
+        stmt = "SELECT name FROM streets WHERE lon <= " + repr(bounds['maxLon']) + " AND lon >= " + repr(bounds['minLon']) + " AND lat <= " + repr(bounds['maxLat']) + " AND lat >= " + repr(bounds['minLat'])
+        print(stmt)
+        return '\n'.join([x[0] for x in self.conn.execute(stmt)])
+
