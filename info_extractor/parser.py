@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 class StreetObj:
     def __init__(self):
         self.address=""
+        self.low=""
         self.district=""
         self.houses=[]
         self.coords={}
@@ -23,7 +24,7 @@ class StreetObj:
         return "," + ','.join(self.houses) + ",";
    
     def create_insert(self):
-        return "INSERT INTO streets VALUES ('" + self.address + "','" + self.district + "','" + self.pack_houses() + "'," + repr(self.coords['lon']) + "," + repr(self.coords['lat']) + ")"
+        return "INSERT INTO streets VALUES ('" + self.address + "','" + self.low + "','" + self.district + "','" + self.pack_houses() + "'," + repr(self.coords['lon']) + "," + repr(self.coords['lat']) + ")"
 
 soup = BeautifulSoup(open(sys.argv[1], 'r'), 'html.parser')
 
@@ -36,6 +37,7 @@ while not el_li is None:
             raw=el_li.span.string
             k=raw.rfind(', ')
             street.address=raw[k+2:]
+            street.low=raw[k+2:].lower()
         elif el_li.b.string == "Район города:":
             street.district=el_li.span.string
         elif el_li.b.string == "Номера домов:":
@@ -57,13 +59,13 @@ conn = sqlite3.connect(r"streets_NizhNov.db")
 c = conn.cursor()
 
 #c.execute('''CREATE TABLE streets
-#             (name text, district text, houses text, lon real, lat real)''')
+#             (name text, name_low text, district text, houses text, lon real, lat real)''')
 
 #print(street.create_insert())
 #c.execute(street.create_insert())
 
-for row in c.execute("SELECT DISTINCT district FROM streets"):
-    print(row)
+#for row in c.execute("SELECT DISTINCT district FROM streets"):
+#    print(row)
 
 conn.commit()
 conn.close()
