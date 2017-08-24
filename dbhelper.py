@@ -14,6 +14,6 @@ class DBHelper:
         self.conn.commit()
 
     def get_names(self, part):
-        stmt = "SELECT name FROM streets WHERE name_low LIKE '%" + str(part).lower().encode('utf-8') + "%'"
+        stmt = "SELECT name FROM streets WHERE name_low LIKE '%" + part.lower() + "%'"
         print(stmt)
         return '\n'.join([x[0] for x in self.conn.execute(stmt)])
