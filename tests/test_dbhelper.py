@@ -23,5 +23,8 @@ class TestMain(unittest.TestCase):
         self.assertEqual(text, db.get_names("генерал"))
         self.assertEqual(text, db.get_names("гЕНЕРАЛ"))
 
+        text = u"Оранжерейный тупик\nТупиковый 1-й переулок\nТупиковый 2-й переулок\nТупиковый 3-й переулок"
+        self.assertEqual(text, db.get_names("тупик"))
+
 if __name__ == '__main__':
     unittest.main()

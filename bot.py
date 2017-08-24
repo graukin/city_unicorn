@@ -31,10 +31,22 @@ def grep_command(bot, update):
         res=db.get_names(msg_text[ndx+1:])
         bot.sendMessage(chat_id=update.message.chat_id, text=res)
 
+def exact_command(bot, update):
+    msg_text = update.message.text.strip()
+    ndx = msg_text.find(' ')
+    if ndx == -1:
+        bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
+    else:
+        logger.warn(msg_text[ndx+1:])
+        db = DBHelper()
+        res=db.get_exact_name(msg_text[ndx+1:])
+        bot.sendMessage(chat_id=update.message.chat_id, text=res)
+
 def help_command(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, 
                     text='<code>hi</code> - bot will say something\n' +
-                         '<code>grep</code> - search for smth in street name; case insensitive',
+                         '<code>grep</code> - search for smth in street name; case insensitive' +
+                         '<code>exact</code> - search for exact street',
                     parse_mode=ParseMode.HTML)
 
 def error(bot, update, error):
@@ -54,6 +66,7 @@ if __name__ == '__main__':
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("hi", hi_command))
     dispatcher.add_handler(CommandHandler("grep", grep_command))
+    dispatcher.add_handler(CommandHandler("exact", exact_command))
 
     dispatcher.add_error_handler(error)
 
