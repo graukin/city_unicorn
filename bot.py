@@ -41,6 +41,9 @@ def exact_command(bot, update):
         db = DBHelper()
         res=db.get_exact_name(msg_text[ndx+1:])
         bot.sendMessage(chat_id=update.message.chat_id, text=res)
+        arr=res.split(' ')
+        print("lon=" + arr[-3] + ", lat=" + arr[-2])
+        bot.sendLocation(chat_id=update.message.chat_id, longitude=float(arr[-3]), latitude=float(arr[-2]))
 
 def help_command(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, 
