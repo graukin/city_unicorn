@@ -37,7 +37,7 @@ while not el_li is None:
             raw=el_li.span.string
             k=raw.rfind(', ')
             street.address=raw[k+2:]
-            street.low=raw[k+2:].lower()
+            street.low='_' + raw[k+2:].lower().replace(' ', '_').replace('-','') + '_'
         elif el_li.b.string == "Район города:":
             street.district=el_li.span.string
         elif el_li.b.string == "Номера домов:":
@@ -61,8 +61,8 @@ c = conn.cursor()
 #c.execute('''CREATE TABLE streets
 #             (name text, name_low text, district text, houses text, lon real, lat real)''')
 
-#print(street.create_insert())
-#c.execute(street.create_insert())
+print(street.create_insert())
+c.execute(street.create_insert())
 
 #for row in c.execute("SELECT DISTINCT district FROM streets"):
 #    print(row)
