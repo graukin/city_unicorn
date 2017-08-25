@@ -32,4 +32,4 @@ class DBHelper:
         return '\n'.join([x[0] for x in self.conn.execute(stmt)])
 
     def query2low(self, query):
-        return part.lower().replace(' ', '.').replace('-','.')
+        return query.lower().replace(' ', '.').replace('-','.')
