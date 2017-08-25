@@ -37,7 +37,7 @@ while not el_li is None:
             raw=el_li.span.string
             k=raw.rfind(', ')
             street.address=raw[k+2:]
-            street.low='_' + raw[k+2:].lower().replace(' ', '_').replace('-','') + '_'
+            street.low='.' + raw[k+2:].lower().replace(' ', '.').replace('-','.') + '.'
         elif el_li.b.string == "Район города:":
             street.district=el_li.span.string
         elif el_li.b.string == "Номера домов:":
