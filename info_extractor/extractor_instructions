@@ -1,0 +1,10 @@
+# load table of contents
+for i in {1..9}; do wget -SO b_${i} "http://mapdata.ru/ryazanskaya-oblast/ryazan/ulicy/stranica-${i}/"; sleep 30; done
+# extract streets and urls to pages with description
+for i in {1..9}; do grep "div class=\"content-item\"" ./b_${i} -A1 | grep "a href" | sed 's/"/ /g' | sed 's/>/ /g' | sed 's/</ /g' | awk '{str="http://mapdata.ru" $3 " "; for(i=4;i<=NF-1;i++) str=str " " $i; print str}' >> ./list; done
+# convert list in ordered one
+awk 'BEGIN{i=1} {print i " " $0; i++}' ./list > ./streets
+# download pages for each street
+for i in {1..795}; do url=$( head -n $i ./streets | tail -n 1 | awk '{print $2}'); echo $i $url; wget -SO ./str_$i "$url"; sleep 30; done
+# parse data and fill DB
+for i in {1..795}; do python3 ./parser.py ../../data/str_$i; done
