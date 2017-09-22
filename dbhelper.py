@@ -7,7 +7,7 @@ import sqlite3
 #sys.setdefaultencoding('UTF8')
 
 class DBHelper:
-    def __init__(self, dbname="info_extractor/streets_Kazan.db"):
+    def __init__(self, dbname="info_extractor/streets_Ryazan.db"):
         self.dbname = dbname
         self.conn = sqlite3.connect(dbname)
 
