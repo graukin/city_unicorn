@@ -13,35 +13,48 @@ from geo import GeoZone,GeoPoint
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.WARN)
 logger = logging.getLogger(__name__)
 
+def send_message(bot, update, message):
+    if len( message ) < 4000:
+        bot.sendMessage(chat_id=update.message.chat_id, text=message)
+    else:
+        ndx = message.rfind("\n", end=4000)
+        while ndx > 0:
+            bot.sendMessage(chat_id=update.message.chat_id, text=message[:ndx]
+            message = message[ndx:]
+            ndx = message.rfind("\n", end=4000)
+            if len( message ) < 4000:
+                bot.sendMessage(chat_id=update.message.chat_id, text=message)
+                return
+
 def hi_command(bot, update):
     user = update.message.from_user
     name = user.first_name
     if name is None:
         name = user.username
     msg = name + ', I\'m here to serve'
-    bot.sendMessage(chat_id=update.message.chat_id, text=msg)
+    send_message(bot, update, msg)
 
 def grep_command(bot, update):
     msg_text = update.message.text.strip()
     ndx = msg_text.find(' ')
     if ndx == -1:
-        bot.sendMessage(chat_id=update.message.chat_id, text="grep WHAT?")
+        send_message(bot, update, "grep WHAT?")
     else:
         logger.warn(msg_text[ndx+1:])
         db = DBHelper()
         res=db.get_names(msg_text[ndx+1:])
-        bot.sendMessage(chat_id=update.message.chat_id, text=res)
+        send_message(bot, update, res)
 
 def exact_command(bot, update):
     msg_text = update.message.text.strip()
     ndx = msg_text.find(' ')
     if ndx == -1:
-        bot.sendMessage(chat_id=update.message.chat_id, text="exact WHAT?")
+        send_message(bot, update, "exact WHAT?")
     else:
         logger.warn(msg_text[ndx+1:])
         db = DBHelper()
         res=db.get_exact_name(msg_text[ndx+1:])
-        bot.sendMessage(chat_id=update.message.chat_id, text=res)
+        send_message(bot, update, res)
         arr=res.split(' ')
         print("lon=" + arr[-3] + ", lat=" + arr[-2])
         bot.sendLocation(chat_id=update.message.chat_id, longitude=float(arr[-3]), latitude=float(arr[-2]))
@@ -50,11 +63,11 @@ def bounds_command(bot, update):
     msg_text = update.message.text.strip()
     ndx = msg_text.find(' ')
     if ndx == -1:
-        bot.sendMessage(chat_id=update.message.chat_id, text="incorrect")
+        send_message(bot, update, "incorrect")
     else:
         arr=msg_text[ndx+1:].split(' ')
         if len(arr) != 5:
-            bot.sendMessage(chat_id=update.message.chat_id, text="incorrect: " + repr(length(arr)) + "parts")
+            send_message(bot, update, "incorrect: " + repr(length(arr)) + "parts")
         else:
             p1 = GeoPoint(float(arr[0]), float(arr[1]))
             p2 = GeoPoint(float(arr[2]), float(arr[3]))
@@ -64,7 +77,7 @@ def bounds_command(bot, update):
 
             db = DBHelper()
             res=db.get_zone(zone.bounds)
-            bot.sendMessage(chat_id=update.message.chat_id, text=repr(zone.radius) + "\n" + res)
+            send_message(bot, update, repr(zone.radius) + "\n" + res)
 
 def help_command(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, 
