@@ -22,7 +22,7 @@ class DBHelper:
         return '\n'.join([x[0] for x in self.conn.execute(stmt)])
 
     def get_exact_name(self, part):
-        stmt = "SELECT name, district, lon, lat FROM streets WHERE name_low == '" + self.query2low(part) + "'"
+        stmt = "SELECT name, district, lon, lat FROM streets WHERE name_low LIKE '%" + self.query2low(part) + "%' LIMIT 1"
         print(stmt)
         return '\n'.join([x[0]+","+x[1]+", ( "+repr(x[2]) +" "+repr(x[3]) + " )" for x in self.conn.execute(stmt)])
 
