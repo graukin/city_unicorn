@@ -66,12 +66,12 @@ def bounds_command(bot, update):
     if ndx == -1:
         send_message(bot, update, "incorrect")
     else:
-        arr=msg_text[ndx+1:].split(' ')
+        arr=msg_text[ndx+1:].split(',')
         if len(arr) != 5:
             send_message(bot, update, "incorrect: " + repr(length(arr)) + "parts")
         else:
-            p1 = GeoPoint(float(arr[0]), float(arr[1]))
-            p2 = GeoPoint(float(arr[2]), float(arr[3]))
+            p1 = GeoPoint(float(arr[1]), float(arr[0]))
+            p2 = GeoPoint(float(arr[3]), float(arr[2]))
             offset = int(arr[4])
             zone = GeoZone(p1, p2, offset)
             bot.sendLocation(chat_id=update.message.chat_id, longitude=zone.central.lon, latitude=zone.central.lat)
