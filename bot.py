@@ -17,13 +17,14 @@ def send_message(bot, update, message):
     if len( message ) < 4000:
         bot.sendMessage(chat_id=update.message.chat_id, text=message)
     else:
-        ndx = message.rfind("\n", end=4000)
+        msg = message
+        ndx = msg.rfind("\n", end=4000)
         while ndx > 0:
-            bot.sendMessage(chat_id=update.message.chat_id, text=message[:ndx]
-            message = message[ndx:]
-            ndx = message.rfind("\n", end=4000)
-            if len( message ) < 4000:
-                bot.sendMessage(chat_id=update.message.chat_id, text=message)
+            bot.sendMessage(chat_id=update.message.chat_id, text=msg[:ndx])
+            msg = msg[ndx:]
+            ndx = msg.rfind("\n", end=4000)
+            if len( msg ) < 4000:
+                bot.sendMessage(chat_id=update.message.chat_id, text=msg)
                 return
 
 def hi_command(bot, update):
